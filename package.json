@@ -1,0 +1,124 @@
+{
+  "name": "traceroute-visual",
+  "version": "1.0.0",
+  "description": "TraceVis \u2014 Visual Traceroute Network Intelligence Dashboard",
+  "main": "main.js",
+"scripts": {
+    "start": "electron .",
+    "build:win:x64": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win nsis portable --x64",
+    "build:win:ia32": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win nsis portable --ia32",
+    "build:win:arm64": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win nsis portable --arm64",
+    "build:win:all": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win nsis portable --x64 --ia32 --arm64",
+    "build:portable:x64": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win portable --x64",
+    "build:portable:ia32": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win portable --ia32",
+    "build:portable:arm64": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win portable --arm64",
+    "build:portable:all": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win portable --x64 --ia32 --arm64",
+    "build:linux": "electron-builder --linux --x64",
+    "build:linux:arm64": "electron-builder --linux --arm64",
+    "build:linux:all": "electron-builder --linux --x64 --arm64",
+    "build:mac": "electron-builder --mac --x64",
+    "build:mac:arm64": "electron-builder --mac --arm64",
+    "build:mac:universal": "electron-builder --mac --universal",
+    "build:all": "npm run build:win:all && npm run build:linux:all && npm run build:mac:universal"
+  },
+  "build": {
+    "appId": "com.tracevis.app",
+    "productName": "TraceVis",
+    "directories": {
+      "output": "dist"
+    },
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator",
+      "signAndEditExecutable": false,
+      "sign": null,
+      "certificateSubjectName": null,
+      "certificateSha1": null,
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${arch}.exe"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "Network",
+      "executableName": "tracevis",
+      "icon": "assets/icon.png"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.utilities",
+      "identity": null,
+      "icon": "assets/icon.png"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/**/*",
+      "!**/*.map",
+      "!**/*.ts"
+    ],
+    "extraMetadata": {
+      "main": "main.js"
+    }
+  },
+  "keywords": [
+    "traceroute",
+    "network",
+    "visualization",
+    "electron"
+  ],
+  "author": "TraceVis <jp.redes@outlook.com.br>",
+  "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3"
+  }
+}
