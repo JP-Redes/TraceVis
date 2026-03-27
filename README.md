@@ -15,7 +15,7 @@
 
 ## 📖 Sobre o Projeto
 
-O **TraceVis** é uma ferramenta de diagnóstico de rede de altíssimo nível que transforma o comando tradicional de `traceroute` em uma experiência visual rica e interativa. Construído com **Electron** e **Leaflet**, ele mapeia geograficamente cada "salto" (hop) de dados da sua máquina até o servidor de destino em tempo real.
+O **TraceVis** é uma ferramenta de diagnóstico de rede que transforma o comando tradicional de `traceroute` em uma experiência visual rica e interativa. Construído com **Electron** e **Leaflet**, ele mapeia geograficamente cada "salto" (hop) de dados da sua máquina até o servidor de destino em tempo real.
 
 ### ✨ Funcionalidades Principais
 
@@ -63,8 +63,8 @@ Se você deseja modificar o código, estudar a arquitetura ou compilar o projeto
 
 Clone o repositório e instale as dependências:
 
-```bash
-git clone [https://github.com/JP-Redes/TraceVis.git](https://github.com/JP-Redes/TraceVis.git)
+```markdown
+git clone https://github.com/JP-Redes/TraceVis.git
 cd TraceVis
 npm install
 ````
@@ -130,6 +130,6 @@ npm run build:mac:arm64     # Apple Silicon (M1/M2/M3)
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](https://github.com/JP-Redes/TraceVis/blob/main/LICENSE) para mais detalhes. Você é livre para usar, modificar e distribuir este software.
 
-<div align="center"\>
-<p\>Desenvolvido com dedicação por João Pedro.</p\>
-</div\>
+<div align="center">
+  <p>Desenvolvido com dedicação por João Pedro.</p>
+</div>
