@@ -1,6 +1,6 @@
 [package]
 name        = "tracevis"
-version     = "2.0.0"
+version     = "2.0.1"
 description = "TraceVis — Visual Traceroute & Network Intelligence Dashboard"
 authors     = []
 license     = "MIT"
