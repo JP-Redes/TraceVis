@@ -1,0 +1,21 @@
+{
+  "name": "tracevis",
+  "version": "2.0.0",
+  "description": "TraceVis — Visual Traceroute & Network Intelligence Dashboard",
+  "author": "TraceVis <jp.redes@outlook.com.br>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JP-Redes/TraceVis.git"
+  },
+  "scripts": {
+    "dev":          "tauri dev",
+    "build":        "tauri build",
+    "build:debug":  "tauri build --debug",
+    "tauri":        "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.6.0"
+  },
+  "keywords": ["tauri", "rust", "traceroute", "network", "visualization", "desktop"]
+}

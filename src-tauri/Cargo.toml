@@ -1,0 +1,36 @@
+[package]
+name        = "tracevis"
+version     = "2.0.0"
+description = "TraceVis — Visual Traceroute & Network Intelligence Dashboard"
+authors     = []
+license     = "MIT"
+edition     = "2021"
+rust-version = "1.75"
+
+[build-dependencies]
+tauri-build = { version = "1", features = [] }
+
+[dependencies]
+tauri      = { version = "1", features = [
+    "window-start-dragging",
+    "window-maximize",
+    "window-close",
+    "window-unmaximize",
+    "window-minimize",
+    "shell-open",
+] }
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio      = { version = "1", features = ["full"] }
+
+# 0.12 usa hyper 1 + rustls por padrão — sem dependência de OpenSSL no Linux
+reqwest    = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+
+chrono     = { version = "0.4", features = ["serde"] }
+thiserror  = "1"
+regex-lite = "0.1"
+# lazy_static removido — usamos std::sync::OnceLock (estável desde Rust 1.70)
+
+[features]
+default          = ["custom-protocol"]
+custom-protocol  = ["tauri/custom-protocol"]

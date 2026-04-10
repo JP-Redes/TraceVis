@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceVis</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="progress-bar" class="progress-bar hidden"></div>
+
+<!-- ── TOPBAR ─────────────────────────────────────── -->
+<header id="topbar" data-tauri-drag-region>
+  <div class="topbar-drag-strip" data-tauri-drag-region></div>
+
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 40 40" width="18" height="18" fill="none">
+        <path d="M 10 30 Q 20 14 30 10" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+        <circle cx="10" cy="30" r="3.5" fill="#22d3a0"/>
+        <circle cx="20" cy="20" r="2.2" fill="currentColor" opacity="0.75"/>
+        <circle cx="30" cy="10" r="3.5" fill="#f87171"/>
+      </svg>
+    </div>
+    <div class="logo-wordmark">TRACE<em>VIS</em></div>
+  </div>
+
+  <div class="vdiv"></div>
+
+  <div class="input-group" id="input-group-wrap">
+    <span class="input-prefix">⌖</span>
+    <input id="target-input" type="text"
+      placeholder="youtube.com  or  2001:4860:4860::8888"
+      autocomplete="off" spellcheck="false">
+    <button id="history-btn" class="input-history-btn" title="Recent traces">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </button>
+    <div id="history-dropdown" class="history-dropdown hidden"></div>
+  </div>
+
+  <button id="trace-btn" data-i18n="trace">Trace</button>
+
+  <button id="clear-btn" class="icon-btn clear-btn hidden" title="Clear">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+
+  <div class="options-row">
+    <label class="opt-toggle" title="Resolve hostnames via DNS">
+      <input type="checkbox" id="resolve-dns-cb">
+      <span class="opt-toggle-track"><span class="opt-toggle-thumb"></span></span>
+      <span class="opt-label" data-i18n="resolve_dns">Resolve DNS</span>
+    </label>
+  </div>
+
+  <div class="status-pill" id="status-pill">
+    <div class="status-dot"></div>
+    <span class="status-text" data-i18n="ready">Ready</span>
+  </div>
+
+  <div class="topbar-right">
+    <button id="shortcuts-btn" class="icon-btn" title="Keyboard shortcuts">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+    </button>
+    <button id="lang-toggle" class="icon-btn">EN</button>
+    <button id="theme-toggle" class="icon-btn">🌙</button>
+  </div>
+
+  <div class="win-controls">
+    <button class="win-btn min"   id="btn-min"></button>
+    <button class="win-btn max"   id="btn-max"></button>
+    <button class="win-btn close" id="btn-close"></button>
+  </div>
+</header>
+
+<!-- ── SHORTCUTS MODAL ──────────────────────────── -->
+<div id="shortcuts-modal" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <div class="modal-title" data-i18n="shortcuts_title">Keyboard Shortcuts</div>
+    <div class="shortcut-list" id="shortcut-list"></div>
+    <button class="modal-close" id="shortcuts-close">✕</button>
+  </div>
+</div>
+
+<!-- ── APP BODY ───────────────────────────────────── -->
+<div id="app">
+
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div class="map-hint" id="map-hint">
+      <div class="hint-ring">🌐</div>
+      <div class="hint-text" data-i18n="hint_text">Enter a domain or IP (v4/v6) above<br>and press <strong>Trace</strong> to visualise the route</div>
+    </div>
+  </div>
+
+  <aside id="sidebar">
+    <div class="sb-header">
+      <div class="sb-eyebrow">
+        <span data-i18n="route_analysis">Route Analysis</span>
+        <button id="export-btn" class="sb-action-btn hidden" title="Export">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+        <button id="filter-btn" class="sb-action-btn hidden" title="Filter hops">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        </button>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-cell">
+          <div class="stat-val" id="stat-hops">0</div>
+          <div class="stat-key" data-i18n="hops">Hops</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val" id="stat-countries">0</div>
+          <div class="stat-key" data-i18n="countries">Countries</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val" id="stat-rtt">—</div>
+          <div class="stat-key" data-i18n="max_rtt">Max RTT</div>
+        </div>
+      </div>
+
+      <div class="secondary-stats">
+        <div class="sec-stat">
+          <span class="sec-key" data-i18n="avg_rtt">Avg RTT</span>
+          <span class="sec-val" id="stat-avg-rtt">—</span>
+        </div>
+        <div class="sec-stat">
+          <span class="sec-key" data-i18n="loss">Loss</span>
+          <span class="sec-val" id="stat-loss">—</span>
+        </div>
+      </div>
+
+      <div class="rtt-chart-wrap hidden" id="rtt-chart-wrap">
+        <div class="rtt-chart-label" data-i18n="rtt_profile">RTT Profile</div>
+        <svg id="rtt-chart" class="rtt-chart" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div class="hop-filter-row hidden" id="hop-filter-row">
+        <input id="hop-filter" type="text" placeholder="Filter hops…" autocomplete="off" spellcheck="false">
+        <button id="hop-filter-clear" class="filter-clear-btn">✕</button>
+      </div>
+    </div>
+
+    <div id="hop-list">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">🌐</div>
+        <div class="empty-label" data-i18n="empty_label">Enter a domain or IP address<br>and press Trace to begin</div>
+      </div>
+    </div>
+
+    <div id="hop-detail"></div>
+
+    <div id="export-toolbar" class="export-toolbar hidden">
+      <button id="btn-copy-report" class="export-action-btn" data-i18n="copy_report">Copy Report</button>
+      <button id="btn-export-json" class="export-action-btn" data-i18n="export_json">JSON</button>
+      <button id="btn-export-csv"  class="export-action-btn" data-i18n="export_csv">CSV</button>
+    </div>
+  </aside>
+
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

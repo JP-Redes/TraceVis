@@ -1,0 +1,56 @@
+{
+  "$schema": "./node_modules/@tauri-apps/cli/schema.json",
+  "build": {
+    "beforeDevCommand":   "",
+    "beforeBuildCommand": "",
+    "devPath":  "../src",
+    "distDir":  "../src",
+    "withGlobalTauri": true
+  },
+  "package": {
+    "productName": "TraceVis",
+    "version":     "2.0.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell":  { "open": true },
+      "window": {
+        "all":          false,
+        "close":        true,
+        "minimize":     true,
+        "maximize":     true,
+        "unmaximize":   true,
+        "startDragging":true
+      }
+    },
+    "bundle": {
+      "active":     true,
+      "targets":    "all",
+      "identifier": "com.tracevis.app",
+      "icon":       ["icons/icon.ico"],
+      "windows": {
+        "nsis": { "installerIcon": "icons/icon.ico" }
+      },
+      "resources": []
+    },
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: http: blob:; connect-src 'self' http://ip-api.com https://cloudflare-dns.com https://unpkg.com https://cartodb-basemaps-a.global.ssl.fastly.net https://cartodb-basemaps-b.global.ssl.fastly.net https://cartodb-basemaps-c.global.ssl.fastly.net https://cartodb-basemaps-d.global.ssl.fastly.net https://a.basemaps.cartocdn.com https://b.basemaps.cartocdn.com https://c.basemaps.cartocdn.com https://d.basemaps.cartocdn.com; object-src 'none'; base-uri 'none'"
+    },
+    "updater": { "active": false },
+    "windows": [
+      {
+        "label":      "main",
+        "title":      "TraceVis",
+        "width":      1440,
+        "height":     900,
+        "minWidth":   1100,
+        "minHeight":  700,
+        "resizable":  true,
+        "fullscreen": false,
+        "decorations":false,
+        "center":     true
+      }
+    ]
+  }
+}

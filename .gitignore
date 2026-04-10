@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+npm-debug.log
+
+src-tauri/target/
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
